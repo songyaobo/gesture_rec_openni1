@@ -1,0 +1,76 @@
+
+===============================================================================
+=                       基于openNI+NITE实现手势识别                           =
+===============================================================================
+
+开发环境
+
+Qt5.7
+
+===============================================================================
+
+依赖库
+
+openNI-V1.5.7.10
+sensor-V5.1.2.1
+NITE-V1.5.2.23
+
+
+===============================================================================
+
+软件使用方法
+
+本软件可以识别出三种手势动作，分别为水平、垂直和点击。当作出以上三种动作后，控制台会
+分别输出horizontal、vertical和click。
+
+===============================================================================
+
+核心函数和参数意义
+
+主要用到以下四个回调函数
+
+(1)当Gesture Generator侦测到当前手势时会触发下面回调函数。
+
+void XN_CALLBACK_TYPE GestureRecognized( xn::GestureGenerator& generator,
+                                         const XnChar* strGesture,
+                                         const XnPoint3D* pIDPosition,
+                                         const XnPoint3D* pEndPosition,
+                                         void* pCookie )
+
+ 
+参数意义：generator为Gesture Generator本身的参考，strGesture为当前识别出的手势名称，
+pIDPosition和pEndPosition为当前手势的起止点，同时为回调函数HandCreate提供位置信息。
+pCookie为该回调函数提供额外信息。
+
+(2)当Hands Generator开始追踪手部位置时会触发下面的回调函数。
+
+void XN_CALLBACK_TYPE HandCreate( xn::HandsGenerator& generator,
+                                  XnUserID nId,
+                                  const XnPoint3D* pPosition,
+                                  XnFloat fTime,
+                                  void* pCookie )
+
+
+参数意义：generator为Hands Generator本身的参考，nId用来识别不同手的ID，pPosition代表
+目前的手部位置,fTime为时间，以秒为单位,pCookie,使用者自己额外传递的资料。
+
+(3)当Hands Generator正在追踪的手部位置改变时，会触发下面的回调函数。
+
+void XN_CALLBACK_TYPE HandUpdate( xn::HandsGenerator& generator,
+                                  XnUserID nId,
+                                  const XnPoint3D* pPosition,
+                                  XnFloat fTime,
+                                  void* pCookie ) 
+
+参数意义：generator为Hands Generator本身的参考，nId用来识别不同手的ID，pPosition代表
+目前的手部位置,fTime为时间，以秒为单位,pCookie,使用者自己额外传递的资料。
+
+(4)当 Hands Generator 无法继续追踪手部的位置时，会触发下面的回调函数。
+void XN_CALLBACK_TYPE HandDestroy( xn::HandsGenerator& generator,
+                                   XnUserID nId,
+                                   XnFloat fTime,
+                                   void* pCookie )
+
+参数意义：generator为Hands Generator本身的参考，nId用来识别不同手的ID，fTime为时间，
+以秒为单位,pCookie,使用者自己额外传递的资料。
+
